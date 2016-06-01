@@ -171,9 +171,23 @@ def app_create():
     except ValueError:
         data = {}
 
+    repo_token = ""
+    private_repo = data.get('private_repo', False)
+    if private_repo:
+        github_username = data.get('github_username', None)
+        github_password = data.get('github_password', None)
+        try:
+            git_url = data.get("repo", "")
+            gha = github.GitHubAuth(
+                git_url,
+                username=github_username,
+                password=github_password)
+            repo_token = gha.repo_token
+        except github.GitHubException as ghe:
+            repo_token = ''
+
     app_data = {
-        "repo_token": "",
-        "name": data.get("name", "TestApp"),
+        "name": data.get("name", ""),
         "parameters": {
             "carina_params": {
                 "cluster_name": data.get("clustername"),
@@ -182,12 +196,15 @@ def app_create():
             },
             "user_params":  data.get('user_params', {})
         },
-        "description": data.get("description", "unknown description"),
+        "description": data.get("description", "Nnot provided"),
         "base_url": "/v1",
-        "languagepack": data.get("lp_name", "lp unknown"),
+        "languagepack": data.get("lp_name", ""),
         "source": {
-            "repository": data.get("repo", "unkown"),
-            "revision": "master"
+            "repository": data.get("repo", ""),
+            "revision": "master",
+            "repo_token": repo_token,
+            "private": private_repo,
+            "private_ssh_key": data.get("private_ssh_key", "")
         },
         "version": 1,
         "trigger_actions": ["unittest", "build", "deploy"],
