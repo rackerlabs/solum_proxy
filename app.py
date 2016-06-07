@@ -96,7 +96,14 @@ def language_pack_create():
     lp_data = {
         "source_uri": data.get("uri", ""),
         "base_url": "/v1",
-        "name": data.get("name", "")
+        "name": data.get("name", ""),
+        "lp_params": {
+            "carina_params": {
+                "api_key": data.get("apikey"),
+                "user_name": data.get("username"),
+                "cluster_name": data.get("clustername", "lp_build_cluster")
+            }
+        }
     }
     resp = requests.post(SOLUM_URL+"/v1/language_packs",
                          headers=headers,
