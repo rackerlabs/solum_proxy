@@ -28,6 +28,8 @@ headers = {'Content-Type': 'application/json',
 
 SOLUM_URL = "https://dfw.solum.api.rackspacecloud.com"
 
+print("SOLUM_UI_PORT:%s" % os.environ.get("SOLUM_UI_PORT"))
+
 if os.environ.get('SOLUM_URL', None) is not None:
     SOLUM_URL = os.environ.get('SOLUM_URL')
 
@@ -469,4 +471,4 @@ def hello():
 
 if __name__ == "__main__":
     app.debug = True
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='127.0.0.1', port=int(os.environ.get("SOLUM_UI_PORT", 80)),threaded=True)
